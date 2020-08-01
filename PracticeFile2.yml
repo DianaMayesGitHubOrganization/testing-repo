@@ -1,0 +1,22 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'LaunchConfiguration template'
+Resources:
+  MyLaunchConfiguration: 
+    Type: AWS::AutoScaling::LaunchConfiguration
+    DeletionPolicy: Delete
+    Properties:
+      ImageId: 'ami-09d95fab7fff3776c'
+      InstanceType: 't2.micro'
+      KeyName: new_account_key_pair
+      SecurityGroups:
+        - !Ref SG
+      UserData:
+        "Fn::Base64":
+          !Sub |
+            #!/bin/bash
+            yum update -y
+            yum install httpd -y
+            chkconfig httpd on
+            service httpd start
+            cd /var/www/html
+            echo "<html><h1>Hello Class of 2020! This is the Sydney Web Server</h1></html>" > index.html
